@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8" />
     <title>Notation storage</title>
-<#--    <link rel="stylesheet" href="/static/style.css" />-->
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
@@ -23,7 +22,7 @@
     </style>
 </head>
 <body>
-<#include "navbar.ftlh">
+
 <div class="container mt-5">
 <#nested>
 </div>
