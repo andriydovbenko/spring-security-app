@@ -2,7 +2,7 @@ package com.training.controller;
 
 import com.training.domain.Role;
 import com.training.domain.User;
-import com.training.repository.UserRepository;
+import com.training.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,12 +16,12 @@ import java.util.Map;
 public class RegistrationController {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RegistrationController(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public RegistrationController(PasswordEncoder passwordEncoder, UserService userService) {
         this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/registration")
@@ -31,7 +31,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
+        User userFromDb = userService.findByUsername(user.getUsername());
 
         if (userFromDb != null) {
             model.put("message", "User exists!");
@@ -41,7 +41,7 @@ public class RegistrationController {
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
-        userRepository.save(user);
+        userService.save(user);
 
         return "redirect:/login";
     }

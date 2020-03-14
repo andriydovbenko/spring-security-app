@@ -19,16 +19,16 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserRepository userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserRepository userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public String getUserList(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
 
         return "userList";
     }
@@ -61,15 +61,15 @@ public class UserController {
             }
         }
 
-        userRepository.save(user);
+        userService.save(user);
 
         return "redirect:/user";
     }
 
     @DeleteMapping(value = "/{userId}")
     public String deleteUser(@PathVariable Long userId) {
-        if (userRepository.findById(userId).isPresent()) {
-            userRepository.deleteById(userId);
+        if (userService.findById(userId).isPresent()) {
+            userService.deleteById(userId);
         }
 
         return "redirect:/user";

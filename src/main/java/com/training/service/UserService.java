@@ -1,24 +1,19 @@
 package com.training.service;
 
-import com.training.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import com.training.domain.User;
 
-@Service
-public class UserService implements UserDetailsService {
+import java.util.List;
+import java.util.Optional;
 
-    private final UserRepository userRepository;
+public interface UserService {
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    User findByUsername(String username);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
-    }
+    Optional<User> findById(Long userId);
+
+    void save(User user);
+
+    void deleteById(Long userId);
+
+    List<User> findAll();
 }

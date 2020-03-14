@@ -2,7 +2,8 @@ package com.training.controller;
 
 import com.training.domain.Message;
 import com.training.domain.User;
-import com.training.repository.MessageRepository;
+import com.training.service.MessageService;
+import com.training.service.impl.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,24 +15,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 
 @Controller
-public class MainController {
+public class MessageController {
+
+    private final MessageService messageService;
 
     @Autowired
-    private MessageRepository messageRepository;
+    public MessageController(MessageServiceImpl messageService) {
+        this.messageService = messageService;
+    }
 
     @GetMapping("/")
-    public String greeting(Map<String, Object> model) {
+    public String greeting() {
         return "greeting";
     }
 
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-        Iterable<Message> messages = messageRepository.findAll();
+        Iterable<Message> messages;
 
         if (filter != null && !filter.isEmpty()) {
-            messages = messageRepository.findByTag(filter);
+            messages = messageService.findByTag(filter);
         } else {
-            messages = messageRepository.findAll();
+            messages = messageService.findAll();
         }
 
         model.addAttribute("messages", messages);
@@ -48,9 +53,9 @@ public class MainController {
     ) {
         Message message = new Message(text, tag, user);
 
-        messageRepository.save(message);
+        messageService.save(message);
 
-        Iterable<Message> messages = messageRepository.findAll();
+        Iterable<Message> messages = messageService.findAll();
 
         model.put("messages", messages);
 
